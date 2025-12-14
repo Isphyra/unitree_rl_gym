@@ -6,6 +6,7 @@ import numpy as np
 from legged_gym import LEGGED_GYM_ROOT_DIR
 import torch
 import yaml
+import keyboard
 
 
 def get_gravity_orientation(quaternion):
@@ -90,6 +91,24 @@ if __name__ == "__main__":
             counter += 1
             if counter % control_decimation == 0:
                 # Apply control signal here.
+                
+                # --- NEUE STEUERUNG EINFÜGEN ---
+                vx = 0.0
+                vy = 0.0
+                dyaw = 0.0
+
+                if keyboard.is_pressed('w'): vx = 0.6   # Vorwärts
+                if keyboard.is_pressed('s'): vx = -0.4  # Rückwärts
+                if keyboard.is_pressed('a'): vy = 0.4   # Seitlich Links
+                if keyboard.is_pressed('d'): vy = -0.4  # Seitlich Rechts
+                if keyboard.is_pressed('q'): dyaw = 0.5 # Drehen Links
+                if keyboard.is_pressed('e'): dyaw = -0.5# Drehen Rechts
+
+                # Die Werte in die cmd-Variable schreiben, die der Roboter liest
+                cmd[0] = vx
+                cmd[1] = vy
+                cmd[2] = dyaw
+                # -------------------------------
 
                 # create observation
                 qj = d.qpos[7:]
