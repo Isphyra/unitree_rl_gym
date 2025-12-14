@@ -7,6 +7,7 @@ from legged_gym import LEGGED_GYM_ROOT_DIR
 import torch
 import yaml
 import keyboard
+import pygame
 
 
 def get_gravity_orientation(quaternion):
@@ -69,6 +70,19 @@ if __name__ == "__main__":
 
     counter = 0
 
+    # --- XBOX CONTROLLER SETUP ---
+    import pygame
+    pygame.init()
+    pygame.joystick.init()
+    joystick = None
+    if pygame.joystick.get_count() > 0:
+        joystick = pygame.joystick.Joystick(0)
+        joystick.init()
+        print(f"Controller verbunden: {joystick.get_name()}")
+    else:
+        print("Kein Controller gefunden!")
+    # -----------------------------
+
     # Load robot model
     m = mujoco.MjModel.from_xml_path(xml_path)
     d = mujoco.MjData(m)
@@ -80,7 +94,7 @@ if __name__ == "__main__":
     with mujoco.viewer.launch_passive(m, d) as viewer:
         # Close the viewer automatically after simulation_duration wall-seconds.
         start = time.time()
-        while viewer.is_running() and time.time() - start < simulation_duration:
+        while viewer.is_running():
             step_start = time.time()
             tau = pd_control(target_dof_pos, d.qpos[7:], kps, np.zeros_like(kds), d.qvel[6:], kds)
             d.ctrl[:] = tau
@@ -91,24 +105,41 @@ if __name__ == "__main__":
             counter += 1
             if counter % control_decimation == 0:
                 # Apply control signal here.
-                
-                # --- NEUE STEUERUNG EINFÜGEN ---
+
+                # --- KOMBINIERTE STEUERUNG (Xbox + WASD) ---
                 vx = 0.0
                 vy = 0.0
                 dyaw = 0.0
 
-                if keyboard.is_pressed('w'): vx = 0.6   # Vorwärts
-                if keyboard.is_pressed('s'): vx = -0.4  # Rückwärts
-                if keyboard.is_pressed('a'): vy = 0.4   # Seitlich Links
-                if keyboard.is_pressed('d'): vy = -0.4  # Seitlich Rechts
-                if keyboard.is_pressed('q'): dyaw = 0.5 # Drehen Links
-                if keyboard.is_pressed('e'): dyaw = -0.5# Drehen Rechts
+                # 1. Xbox Controller auslesen (falls vorhanden)
+                if joystick:
+                    pygame.event.pump() 
+                    # Achsen lesen
+                    raw_vx = -joystick.get_axis(1) 
+                    raw_vy = -joystick.get_axis(0)
+                    raw_dyaw = -joystick.get_axis(3)
 
-                # Die Werte in die cmd-Variable schreiben, die der Roboter liest
+                    # Deadzone Funktion (kleine Bewegungen ignorieren)
+                    def deadzone(val, threshold=0.1):
+                        return val if abs(val) > threshold else 0.0
+
+                    vx = deadzone(raw_vx) * 0.8
+                    vy = deadzone(raw_vy) * 0.6
+                    dyaw = deadzone(raw_dyaw) * 1.0
+
+                # 2. Tastatur (WASD) - hat Vorrang, falls gedrückt
+                if keyboard.is_pressed('w'): vx = 0.6
+                if keyboard.is_pressed('s'): vx = -0.4
+                if keyboard.is_pressed('a'): vy = 0.4
+                if keyboard.is_pressed('d'): vy = -0.4
+                if keyboard.is_pressed('q'): dyaw = 0.5
+                if keyboard.is_pressed('e'): dyaw = -0.5
+
+                # Werte setzen
                 cmd[0] = vx
                 cmd[1] = vy
                 cmd[2] = dyaw
-                # -------------------------------
+                # -------------------------------------------
 
                 # create observation
                 qj = d.qpos[7:]
