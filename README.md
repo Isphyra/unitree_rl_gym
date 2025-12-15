@@ -21,7 +21,7 @@ Das Skript `deploy_mujoco.py` wurde stark erweitert ("Ultimate Edition") und bie
 
 ### 1. Repository klonen
 ```bash
-git clone [https://github.com/unitreerobotics/unitree_rl_gym.git](https://github.com/unitreerobotics/unitree_rl_gym.git)
+git clone https://github.com/unitreerobotics/unitree_rl_gym.git
 cd unitree_rl_gym
 ```
 ### 2. Umgebung einrichten
