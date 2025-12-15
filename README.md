@@ -24,7 +24,7 @@ Das Skript `deploy_mujoco.py` wurde stark erweitert ("Ultimate Edition") und bie
 git clone https://github.com/unitreerobotics/unitree_rl_gym.git
 cd unitree_rl_gym
 ```
-### Oder dieses mit der Steuerung
+### ...mit der Steuerung
 ```bash
 git clone https://github.com/Isphyra/unitree_rl_gym
 cd unitree_rl_gym
@@ -53,19 +53,8 @@ pip install numpy torch scipy mujoco mujoco-python-viewer matplotlib tensorboard
 Stelle sicher, dass deine motion.pt Datei (das "Gehirn" des Roboters) im richtigen Ordner liegt: unitree_rl_gym/deploy/pre_train/g1/motion.pt
 
 🚀 Starten der Simulation
-Es gibt zwei Wege, die Simulation zu starten.
 
-Methode A: 1-Klick-Start (Empfohlen)
-Erstelle eine Datei Start_G1.bat auf deinem Desktop mit folgendem Inhalt (Pfad ggf. anpassen):
-```bash
-@echo off
-cd /d C:\Unitree_rly_gym_Project\unitree_rl_gym
-call g1_deploy_env\Scripts\activate.bat
-cd deploy\deploy_mujoco
-python deploy_mujoco.py g1
-pause
-```
-Methode B: Manuell über Terminal
+Manuell über Terminal
 ```bash
 # 1. Umgebung aktivieren
 .\g1_deploy_env\Scripts\Activate.ps1
