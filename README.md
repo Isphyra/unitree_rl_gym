@@ -24,6 +24,12 @@ Das Skript `deploy_mujoco.py` wurde stark erweitert ("Ultimate Edition") und bie
 git clone https://github.com/unitreerobotics/unitree_rl_gym.git
 cd unitree_rl_gym
 ```
+### Oder dieses mit der Steuerung
+```bash
+git clone https://github.com/Isphyra/unitree_rl_gym
+cd unitree_rl_gym
+```
+
 ### 2. Umgebung einrichten
 # Erstelle die virtuelle Umgebung
 ```bash
