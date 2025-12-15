@@ -1,4 +1,6 @@
-# 🤖 Unitree G1 MuJoCo Sim2Sim - Ultimate Edition
+# 🤖 Unitree G1 MuJoCo Sim2Sim:
+
+CC: https://github.com/unitreerobotics/unitree_rl_gym
 
 Dieses Projekt ermöglicht die Simulation des Unitree G1 Roboters in MuJoCo unter Verwendung einer trainierten Reinforcement Learning Policy (`motion.pt`).
 
