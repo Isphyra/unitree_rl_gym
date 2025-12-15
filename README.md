@@ -63,7 +63,7 @@ Manuell über Terminal
 cd deploy\deploy_mujoco
 
 # 3. Starten
-python deploy_mujoco.py g1
+python deploy_mujoco.py g1.yaml
 ```
 ### 🎮 Steuerung
 Das Skript erkennt automatisch, ob ein Xbox-Controller angeschlossen ist. Falls nicht, wird automatisch die Tastatur verwendet.
